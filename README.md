@@ -5,7 +5,7 @@ A collection of AI agent skills for building full-stack applications with [Tence
 ## Installation
 
 ```bash
-npx skills add CloudBase-AI-ToolKit/cloudbase-skills
+npx skills add TencentCloudBase/cloudbase-skills
 ```
 
 Once installed, the skill is automatically applied when the agent detects relevant CloudBase tasks.
