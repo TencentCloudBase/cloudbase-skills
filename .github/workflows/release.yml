@@ -1,0 +1,31 @@
+name: Release on skill update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'skills/cloudbase/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version from date
+        id: version
+        run: echo "tag=v$(date -u +'%Y.%m.%d.%H%M')" >> $GITHUB_OUTPUT
+
+      - name: Zip skill
+        run: zip -r cloudbase-skill.zip skills/cloudbase
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
+          files: cloudbase-skill.zip
