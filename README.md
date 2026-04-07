@@ -1,3 +1,5 @@
+<a href="https://cloud.tencent.com/developer/article/2649588" target="_blank"><img width="3094" height="654" alt="banner" src="https://github.com/user-attachments/assets/37982d04-274a-4b6c-85b8-06983c615d9a" /></a>
+
 # CloudBase Agent Skills
 
 A collection of AI agent skills for building full-stack applications with [Tencent CloudBase](https://cloudbase.net). This skill gives your coding agent deep knowledge of CloudBase APIs, authentication patterns, database operations, cloud functions, and more — so it can write correct, idiomatic CloudBase code without guessing.
