@@ -1,5 +1,9 @@
 name: Sync to CNB
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   sync:
