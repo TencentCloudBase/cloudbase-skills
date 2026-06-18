@@ -17,17 +17,37 @@ All reference documentation files are located in the `references/` directory rel
 cloudbase/
 ├── SKILL.md              # This file (main entry)
 └── references/           # All reference documentation
-    ├── auth-web/         # Web authentication guide
-    ├── auth-wechat/      # WeChat authentication guide
-    ├── no-sql-web-sdk/   # NoSQL database for Web
+    ├── auth-web/SKILL.md       # Web authentication guide
+    ├── auth-wechat/SKILL.md    # WeChat authentication guide
+    ├── no-sql-web-sdk/SKILL.md # NoSQL database for Web
     ├── ui-design/        # UI design guidelines
     └── ...               # Other reference docs
 ```
 
-**How to use:** When this document mentions reading a reference file like `references/auth-web/README.md`, simply read that file from the `references/` subdirectory.
+**How to use:** When this document mentions reading a reference file like `references/auth-web/SKILL.md`, simply read that file from the `references/` subdirectory.
 
 ---
 
+
+## Workflow
+
+Every CloudBase task follows this three-stage process:
+
+```
+1. Exploration  →  Read the matching skill completely before writing any code.
+                   Search for it with searchKnowledgeBase(mode="skill"), then
+                   Read the full SKILL.md content. Do not rely on search summaries.
+2. Implementation
+   ├── 2a. Resource preparation → Use MCP tools to prepare backend resources
+   │     (enable auth providers, create database tables, configure storage,
+   │      set up security rules — before writing any frontend code)
+   └── 2b. Frontend implementation → Write code, install deps, start server, test
+3. Close-out  →  Run cloudbase-code-review, fix errors, declare done
+```
+
+**Key constraints:**
+- Stage 2a (resource preparation) must precede frontend code. Always use MCP tools.
+- Stage 3 is mandatory. The close-out includes automated lint checks and manual LLM review. Do not skip it.
 
 ## Activation Contract
 
@@ -66,6 +86,7 @@ If a skill points to its own `references/...` files, keep following those relati
 
 These rules override convenience. They are a gate before saying "done". Full rationale + replacements live in `web-development` (Engineering constitution section).
 
+- **Prepare backend resources via MCP before writing frontend code.** Auth providers, database tables, storage domains, and security rules must be set up through MCP tools before writing any frontend code that depends on them. Writing frontend code against non-existent resources will cause grader failures. This applies to every scenario — auth, database, storage, functions, CloudRun.
 - **Do NOT use `any` to bypass type errors.** Not `: any`, not `as any`, not `@ts-ignore`, not `@ts-nocheck`. Use `unknown` + a type guard, a precise `interface`, or `declare module` augmentation instead. `any` propagates silently and defeats the compile-time safety net.
 - **Self-verify before claiming done.** Static layer (`tsc --noEmit` / lint / project build / unit tests) **and** runtime layer (use `agent-browser` to exercise user-visible flows when the change touches routing, rendering, forms, auth, or async UI). "It should work" without evidence is not acceptable. If a layer cannot be run locally, name the gap explicitly.
 - **Do not paper over failures.** No empty `try/catch` to silence bugs, no skipping / deleting failing tests to make CI green, "it compiles" is not "it works".
@@ -81,6 +102,7 @@ These rules override convenience. They are a gate before saying "done". Full rat
 | WeChat mini program + CloudBase | `miniprogram-development` | `auth-wechat`, `no-sql-wx-mp-sdk` | `auth-web`, `web-development` | Whether the project really uses CloudBase / `wx.cloud` |
 | Native App / Flutter / React Native | `http-api` | `auth-tool`, `relational-database-tool` | `auth-web`, `no-sql-web-sdk`, `web-development` | SDK boundary, OpenAPI, auth method |
 | Web projects + NoSQL Database | `web-development` | `no-sql-web-sdk`, `auth-web` | `relational-database-tool`, `http-api` | Login state and database access permission model |
+| CloudBase PostgreSQL / PG | `postgresql-development` | `auth-tool`, `auth-web`, `web-development`, `cloud-storage-web`, `http-api` | `relational-database-tool`, `no-sql-web-sdk` | PG schema, usernamePassword login, backend/RLS permission model |
 | MySQL Database (relational) | `relational-database-tool` | `relational-database-web`, `http-api` | `no-sql-web-sdk`, `web-development` | Distinguish MCP management vs app code access |
 | Cloud Functions | `cloud-functions` | `auth-tool`, `ai-model-nodejs` | `cloudrun-development`, `auth-web` | Event vs HTTP function, runtime, `scf_bootstrap` |
 | CloudRun backend | `cloudrun-development` | `auth-tool`, `relational-database-tool` | `cloud-functions` | Container boundary, Dockerfile, CORS |
@@ -97,6 +119,7 @@ These rules override convenience. They are a gate before saying "done". Full rat
 - **WeChat mini program + CloudBase** — 小程序 云开发, wx.cloud, mini program cloudbase, OPENID, 小程序数据库
 - **Native App / Flutter / React Native** — Android CloudBase, iOS CloudBase, Flutter CloudBase, React Native CloudBase, 原生 App 接入
 - **Web projects + NoSQL Database** — Web 文档数据库, CloudBase collection, 前端查库, NoSQL Web SDK
+- **CloudBase PostgreSQL / PG** — CloudBase PG, PostgreSQL, Postgres, PG 模式, JS SDK v3 PostgreSQL, app.rdb(), queryPgDatabase, managePgDatabase, mysqldb OpenAPI, PostgREST, RLS
 - **MySQL Database (relational)** — MySQL 建表, executeWriteSQL, security rule, CloudBase 关系型数据库管理
 - **Cloud Functions** — 创建云函数, HTTP 云函数, getFunctionLogs, scf_bootstrap, runtime
 - **CloudRun backend** — CloudRun 部署, 云托管, container backend, Dockerfile
@@ -113,6 +136,7 @@ These rules override convenience. They are a gate before saying "done". Full rat
 - Web auth failures are usually caused by skipping provider configuration, not by missing frontend code snippets.
 - Native App failures are usually caused by reading Web SDK paths, not by missing HTTP API knowledge.
 - Mini program failures are usually caused by treating `wx.cloud` like Web auth or Web SDK.
+- CloudBase PG failures are usually caused by falling back to MySQL/NoSQL routing, skipping username-password auth readiness, guessing raw HTTP paths instead of using JS SDK v3 `app.rdb()` / documented `mysqldb` OpenAPI, or leaving backend/RLS permissions as frontend-only checks.
 - AI 大模型调用失败通常是资源包未开通或小程序成长计划未报名，不是 SDK 用错；先跑 `DescribeEnvPostpayPackage` / `DescribeActivityInfo` 资格检查，再去改代码。小程序端优先判成长计划，Web / Node.js 端优先判 Token Credits 资源包。
 
 ### Web SDK quick reminder
