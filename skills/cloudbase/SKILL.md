@@ -100,6 +100,7 @@ These rules override convenience. Full rationale lives in `web-development`.
 | Cloud Functions | `cloud-functions` | `auth-tool-cloudbase`, `ai-model-nodejs` | `cloudrun-development`, `auth-web-cloudbase` | Event vs HTTP function, runtime, `scf_bootstrap` |
 | CloudRun backend | `cloudrun-development` | `auth-tool-cloudbase`, `relational-database-mcp-cloudbase` | `cloud-functions` | Container boundary, Dockerfile, CORS |
 | AI Agent (智能体开发) | `cloudbase-agent` | `cloud-functions`, `cloudrun-development` | `cloud-functions`, `cloudrun-development` | AG-UI protocol, scf_bootstrap, SSE streaming |
+| Minimal Web BaaS demo (fast path) | `minimal-web-baas-demo` | `web-development`, `cloudbase-document-database-web-sdk`, `postgresql-development-cloudbase` | `cloud-functions`, `cloudrun-development`, `spec-workflow`, `ui-design` | BaaS-first Web SDK CRUD, MCP schema only, zero cloud functions unless secrets/cron/rules-cannot-express |
 | UI generation | `ui-design` | `web-development`, `miniprogram-development` | `cloud-functions` | Design specification first |
 | AI Model (Web) | `web-development` | `ai-model-web`, `ui-design` | `ai-model-wechat`, `http-api-cloudbase` | Platform and streaming interaction mode |
 | AI model call (大模型调用 / 文本生成 / 图片生成 / 流式对话) | `ai-model-web` | `ai-model-nodejs`, `ai-model-wechat` | `cloudbase-agent`, `cloud-functions`, `cloudrun-development` | 先跑「调用前必须的资格检查」：`DescribeActivityInfo`（小程序成长计划） + `DescribeEnvPostpayPackage`（Token Credits 资源包） |
@@ -117,6 +118,7 @@ These rules override convenience. Full rationale lives in `web-development`.
 - **Cloud Functions** — 创建云函数, HTTP 云函数, getFunctionLogs, scf_bootstrap, runtime
 - **CloudRun backend** — CloudRun 部署, 云托管, container backend, Dockerfile
 - **AI Agent (智能体开发)** — AI Agent, 智能体, 智能体开发, AG-UI protocol, LangGraph, LangChain, CrewAI, streaming agent, agent UI
+- **Minimal Web BaaS demo (fast path)** — 最小前后端, 最小可用 demo, 最小 fullstack, 搭一套 demo, 带云数据库的 demo, 带云函数+云数据库, 留言板, Todo 应用, todo app, Notes app, Kanban, Lovable, BaaS demo, minimal web baas, 快速 demo
 - **UI generation** — 设计页面, 登录页 UI, frontend interface, 组件样式, prototype
 - **AI Model (Web)** — Web AI 对话, CloudBase AI 流式输出, Web 集成模型
 - **AI model call (大模型调用 / 文本生成 / 图片生成 / 流式对话)** — 大模型调用, AI 模型调用, generateText, streamText, generateImage, 文本生成, 图片生成, 流式对话, hunyuan-exp, deepseek-v4-flash, Token Credits 资源包, 小程序成长计划, ai_miniprogram_inspire_plan, callCloudApi AI 模型, CreateAIModel
