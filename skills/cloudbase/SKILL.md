@@ -71,7 +71,7 @@ Follow relative `references/...` paths from the current skill. If MCP is unavail
 
 - After 2–3 failed attempts on the same path, stop and reroute (platform skill, runtime, auth domain, permission model, SDK boundary).
 - Always specify `EnvId` explicitly; do not rely on CLI-selected or implicit env state.
-- When the environment identifier is an alias, nickname, or other short form, **do not pass it directly** to `auth.set_env`, SDK init, console URLs, or generated config. First resolve it to the canonical full `EnvId` with `envQuery(action=list, alias=..., aliasExact=true)`. If multiple environments match or no exact alias exists, stop and clarify with the user.
+- When the environment identifier is an alias, nickname, or other short form, **do not pass it directly** to `auth.set_env`, SDK init, console URLs, or generated config. First resolve it to the canonical full `EnvId` with `queryEnv(action=list, alias=..., aliasExact=true)`. If multiple environments match or no exact alias exists, stop and clarify with the user.
 - When writing MCP/tool results to a file, pass serialized text (`JSON.stringify(result, null, 2)`), not raw objects. If a write tool says `content` expected a string but received an object, do not retry with the same raw object. Serialize the object first, then retry once with the serialized text, and make sure the retried call actually passes the serialized string rather than the original object.
 - Keep scenario-specific pitfalls in child skills — do not expand this entry file.
 - **First frontend deploy must use `manageApps(action="createApp", ...)`.** `manageHosting` is only for incremental updates of projects originally deployed via hosting.
@@ -97,6 +97,7 @@ These rules override convenience. Full rationale lives in `web-development`.
 | WeChat mini program + CloudBase | `miniprogram-development` | `auth-wechat-miniprogram`, `cloudbase-document-database-in-wechat-miniprogram` | `auth-web-cloudbase`, `web-development` | Whether the project really uses CloudBase / `wx.cloud` |
 | Native App / Flutter / React Native | `http-api-cloudbase` | `auth-tool-cloudbase`, `relational-database-mcp-cloudbase` | `auth-web-cloudbase`, `cloudbase-document-database-web-sdk`, `web-development` | SDK boundary, OpenAPI, auth method |
 | Web projects + NoSQL Database | `web-development` | `cloudbase-document-database-web-sdk`, `auth-web-cloudbase` | `relational-database-mcp-cloudbase`, `http-api-cloudbase` | Login state and database access permission model |
+| CloudBase PostgreSQL Best Practices | `postgresql-best-practices-cloudbase` | `postgresql-development-cloudbase` | `cloudbase-document-database-web-sdk` | Access paths, index decisions, row authorization, and launch capacity |
 | CloudBase PostgreSQL / PG | `postgresql-development-cloudbase` | `auth-tool-cloudbase`, `auth-web-cloudbase`, `web-development`, `miniprogram-development`, `cloud-storage-web`, `http-api-cloudbase` | `relational-database-mcp-cloudbase`, `cloudbase-document-database-web-sdk` | PG schema, usernamePassword login, backend/RLS permission model |
 | MySQL Database (relational) | `relational-database-mcp-cloudbase` | `relational-database-web-cloudbase`, `http-api-cloudbase` | `cloudbase-document-database-web-sdk`, `web-development` | Distinguish MCP management vs app code access |
 | Cloud Functions | `cloud-functions` | `auth-tool-cloudbase`, `ai-model-nodejs` | `cloudrun-development`, `auth-web-cloudbase` | Event vs HTTP function, runtime, `scf_bootstrap` |
@@ -115,6 +116,7 @@ These rules override convenience. Full rationale lives in `web-development`.
 - **WeChat mini program + CloudBase** — 小程序 云开发, wx.cloud, mini program cloudbase, OPENID, 小程序数据库
 - **Native App / Flutter / React Native** — Android CloudBase, iOS CloudBase, Flutter CloudBase, React Native CloudBase, 原生 App 接入
 - **Web projects + NoSQL Database** — Web 文档数据库, CloudBase collection, 前端查库, NoSQL Web SDK
+- **CloudBase PostgreSQL Best Practices** — PG access pattern, 数据库访问路径, N+1 查询, 批量查询, 慢查询, EXPLAIN ANALYZE, 缺索引, 活动数据库容量
 - **CloudBase PostgreSQL / PG** — CloudBase PG, PostgreSQL, Postgres, PG 模式, JS SDK v3 PostgreSQL, app.rdb(), queryPgDatabase, managePgDatabase, mysqldb OpenAPI, PostgREST, RLS, service_role, auth schema, storage schema, pgvector
 - **MySQL Database (relational)** — MySQL 建表, executeWriteSQL, security rule, CloudBase 关系型数据库管理
 - **Cloud Functions** — 创建云函数, HTTP 云函数, getFunctionLogs, scf_bootstrap, runtime
