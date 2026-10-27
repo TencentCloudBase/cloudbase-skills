@@ -1,6 +1,6 @@
 ---
 name: cloudbase
-description: "Use this skill when you develop, design, build, deploy, debug, migrate, or troubleshoot CloudBase (腾讯云开发, 云开发, TCB, 微信云开发) projects — Web, 微信小程序, 小程序, uni-app, mobile (iOS, Android, Flutter, React Native). Covers UI (页面, 界面, 表单, dashboard, prototype, 原型); auth (登录, 注册, OAuth, publishable key); databases (NoSQL 文档数据库, MySQL 关系型数据库, PostgreSQL/CloudBase PG, app.rdb(), queryPgDatabase/managePgDatabase, CRUD, security rules); 云函数/cloud functions (serverless, scf_bootstrap); CloudRun (云托管, Dockerfile); 云存储; built-in AI (内置大模型, AI 对话, streaming, 流式输出, 图片生成, generateText, streamText, createModel, generateImage, TokenHub, Hunyuan, DeepSeek, GLM, Kimi, Token Credits 资源包, 小程序成长计划); third-party/custom model onboarding (第三方大模型接入, 大模型调用, LLM API); AI agent (智能体, AG-UI, LangGraph); ops troubleshooting (巡检, 诊断, 日志); spec workflow (需求文档, 技术方案, requirements, tasks.md). Do NOT use for non-CloudBase projects, pure frontend without CloudBase, or self-hosted backends without CloudBase."
+description: "Use this skill when you develop, design, build, deploy, debug, migrate, or troubleshoot CloudBase (腾讯云开发, 云开发, TCB, 微信云开发) projects — Web, 微信小程序, 小程序, uni-app, mobile (iOS, Android, Flutter, React Native). Covers UI (页面, 界面, 表单, dashboard, prototype, 原型); auth (登录, 注册, OAuth, publishable key); databases (NoSQL 文档数据库, PostgreSQL/CloudBase PG, 已有 MySQL, app.rdb(), queryPgDatabase/managePgDatabase, CRUD, security rules); 云函数/cloud functions (serverless, scf_bootstrap); CloudRun (云托管, Dockerfile); 云存储; built-in AI (内置大模型, AI 对话, streaming, 流式输出, 图片生成, generateText, streamText, createModel, generateImage, TokenHub, Hunyuan, DeepSeek, GLM, Kimi, Token Credits 资源包, 小程序成长计划); third-party/custom model onboarding (第三方大模型接入, 大模型调用, LLM API); AI agent (智能体, AG-UI, LangGraph); ops troubleshooting (巡检, 诊断, 日志); spec workflow (需求文档, 技术方案, requirements, tasks.md). Do NOT use for non-CloudBase projects, pure frontend without CloudBase, or self-hosted backends without CloudBase."
 description_zh: 为你的小程序和 Web/H5 提供一体化运行与部署环境，包括数据库、云函数、云存储、身份权限和静态托管
 description_en: An all-in-one runtime and deployment environment for WeChat Mini Programs and Web/H5 apps, including database, cloud functions, cloud storage, identity and access control, and static hosting.
 version: 2.36.1
@@ -110,7 +110,7 @@ These rules override convenience. Full rationale lives in `web-development`.
 - **Self-verify before claiming done.** Static (`tsc` / lint / build / tests) and runtime (`agent-browser` for user-visible flows). Name gaps explicitly if a layer cannot run.
 - **Do not paper over failures.** No empty `try/catch`, no deleting failing tests to go green.
 - **`ai.createModel(...)` / `wx.cloud.extend.AI.createModel(provider)` takes a GroupName**, not a vendor/model id. Legal: `"cloudbase"`, `"hunyuan-v3"` (legacy plan group, only `hy3`, being retired), `"hunyuan-exp"` (older legacy builtin), or `"custom-<name>"`. Model ids go in `generateText` / `streamText` `model` field. See `ai-model-web` / `ai-model-nodejs` / `ai-model-wechat`.
-- **Low-capability STOP card:** For PostgreSQL / CloudBase PG / `app.rdb()` / `queryPgDatabase` / `managePgDatabase`, route to `postgresql-development-cloudbase` — do **not** use NoSQL/`manageMysqlDatabase` for that path. For Web auth guards, use `auth.getSession()` and require `data.session`; do **not** use deprecated `getLoginState()` / `auth.getUser()` as login proof.
+- **Low-capability STOP card:** For PostgreSQL / CloudBase PG / `app.rdb()` / `queryPgDatabase` / `managePgDatabase`, route to `postgresql-development-cloudbase` — do **not** use NoSQL collection APIs or MySQL tools for that path. For Web auth guards, use `auth.getSession()` and require `data.session`; do **not** use deprecated `getLoginState()` / `auth.getUser()` as login proof.
 
 ### High-priority routing
 
@@ -120,13 +120,13 @@ These rules override convenience. Full rationale lives in `web-development`.
 |----------|------------|-----------|------------------------|--------------------------|
 | Web login / registration / auth UI | `auth-tool-cloudbase` | `auth-web-cloudbase`, `web-development` | `cloud-functions`, `http-api-cloudbase` | Provider status and publishable key |
 | WeChat mini program + CloudBase | `miniprogram-development` | `auth-wechat-miniprogram`, `cloudbase-document-database-in-wechat-miniprogram` | `auth-web-cloudbase`, `web-development` | Whether the project really uses CloudBase / `wx.cloud` |
-| Native App / Flutter / React Native | `http-api-cloudbase` | `auth-tool-cloudbase`, `relational-database-mcp-cloudbase` | `auth-web-cloudbase`, `cloudbase-document-database-web-sdk`, `web-development` | SDK boundary, OpenAPI, auth method |
+| Native App / Flutter / React Native | `http-api-cloudbase` | `auth-tool-cloudbase`, `postgresql-development-cloudbase` | `auth-web-cloudbase`, `cloudbase-document-database-web-sdk`, `web-development` | SDK boundary, OpenAPI, auth method |
 | Web projects + NoSQL Database | `web-development` | `cloudbase-document-database-web-sdk`, `auth-web-cloudbase` | `relational-database-mcp-cloudbase`, `http-api-cloudbase` | Login state and database access permission model |
 | CloudBase PostgreSQL Best Practices | `postgresql-best-practices-cloudbase` | `postgresql-development-cloudbase` | `cloudbase-document-database-web-sdk` | Access paths, index decisions, row authorization, and launch capacity |
 | CloudBase PostgreSQL / PG | `postgresql-development-cloudbase` | `auth-tool-cloudbase`, `auth-web-cloudbase`, `web-development`, `miniprogram-development`, `cloud-storage-web`, `http-api-cloudbase` | `relational-database-mcp-cloudbase`, `cloudbase-document-database-web-sdk` | PG schema, usernamePassword login, backend/RLS permission model |
-| MySQL Database (relational) | `relational-database-mcp-cloudbase` | `relational-database-web-cloudbase`, `http-api-cloudbase` | `cloudbase-document-database-web-sdk`, `web-development` | Distinguish MCP management vs app code access |
+| Existing MySQL (do not recommend) | `relational-database-mcp-cloudbase` | `relational-database-web-cloudbase` | `cloudbase-document-database-web-sdk`, `web-development` | Environment already has MySQL; new relational work uses PostgreSQL |
 | Cloud Functions | `cloud-functions` | `auth-tool-cloudbase`, `ai-model-nodejs` | `cloudrun-development`, `auth-web-cloudbase` | Event vs HTTP function, runtime, `scf_bootstrap` |
-| CloudRun backend | `cloudrun-development` | `auth-tool-cloudbase`, `relational-database-mcp-cloudbase` | `cloud-functions` | Container boundary, Dockerfile, CORS |
+| CloudRun backend | `cloudrun-development` | `auth-tool-cloudbase`, `postgresql-development-cloudbase` | `cloud-functions` | Container boundary, Dockerfile, CORS |
 | AI Agent (智能体开发) | `cloudbase-agent` | `cloud-functions`, `cloudrun-development` | `cloud-functions`, `cloudrun-development` | AG-UI protocol, scf_bootstrap, SSE streaming |
 | Minimal Web BaaS demo (fast path) | `minimal-web-baas-demo` | `web-development`, `cloudbase-document-database-web-sdk`, `postgresql-development-cloudbase` | `cloud-functions`, `cloudrun-development`, `spec-workflow`, `ui-design` | BaaS-first Web SDK CRUD, MCP schema only, zero cloud functions unless secrets/cron/rules-cannot-express |
 | UI generation | `ui-design` | `web-development`, `miniprogram-development` | `cloud-functions` | Design specification first |
@@ -142,8 +142,8 @@ These rules override convenience. Full rationale lives in `web-development`.
 - **Native App / Flutter / React Native** — Android CloudBase, iOS CloudBase, Flutter CloudBase, React Native CloudBase, 原生 App 接入
 - **Web projects + NoSQL Database** — Web 文档数据库, CloudBase collection, 前端查库, NoSQL Web SDK
 - **CloudBase PostgreSQL Best Practices** — PG access pattern, 数据库访问路径, N+1 查询, 批量查询, 慢查询, EXPLAIN ANALYZE, 缺索引, 活动数据库容量
-- **CloudBase PostgreSQL / PG** — CloudBase PG, PostgreSQL, Postgres, PG 模式, JS SDK v3 PostgreSQL, app.rdb(), queryPgDatabase, managePgDatabase, mysqldb OpenAPI, PostgREST, RLS, service_role, auth schema, storage schema, pgvector
-- **MySQL Database (relational)** — MySQL 建表, executeWriteSQL, security rule, CloudBase 关系型数据库管理
+- **CloudBase PostgreSQL / PG** — CloudBase PG, PostgreSQL, Postgres, PG 模式, JS SDK v3 PostgreSQL, app.rdb(), queryPgDatabase, managePgDatabase, mysqldb OpenAPI, PostgREST, RLS, service_role, auth schema, storage schema, pgvector, 关系型数据库, 建表
+- **Existing MySQL (do not recommend)** — 已有 MySQL, 现有 MySQL 实例, queryMysqlDatabase, manageMysqlDatabase
 - **Cloud Functions** — 创建云函数, HTTP 云函数, getFunctionLogs, scf_bootstrap, runtime
 - **CloudRun backend** — CloudRun 部署, 云托管, container backend, Dockerfile
 - **AI Agent (智能体开发)** — AI Agent, 智能体, 智能体开发, AG-UI protocol, LangGraph, LangChain, CrewAI, streaming agent, agent UI
@@ -160,7 +160,8 @@ These rules override convenience. Full rationale lives in `web-development`.
 - Web auth failures: usually skipped provider config, not missing frontend snippets.
 - Native App failures: usually Web SDK paths, not missing HTTP API knowledge.
 - Mini program failures: treating `wx.cloud` like Web auth/SDK.
-- CloudBase PG failures: falling back to MySQL/NoSQL, skipping username-password readiness, or guessing raw HTTP instead of `app.rdb()` / documented OpenAPI.
+- New relational databases use PostgreSQL. MySQL skills apply only when the environment already has a MySQL instance.
+- CloudBase PG failures: falling back to NoSQL or MySQL, skipping username-password readiness, or guessing raw HTTP instead of `app.rdb()` / documented OpenAPI.
 - AI model failures: usually missing Token Credits / Growth Plan — run `DescribeEnvPostpayPackage` / `DescribeActivityInfo` before changing code.
 
 ## MCP + CLI prerequisite
